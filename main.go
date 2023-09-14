@@ -5,14 +5,17 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
-	"time"
+	"syscall"
 )
 
 func main() {
 	cfg := LoadCondig()
 
 	exit := make(chan os.Signal, 1)
-	signal.Notify(exit, os.Interrupt)
+	signal.Notify(exit, syscall.SIGHUP,
+		syscall.SIGINT,
+		syscall.SIGTERM,
+		syscall.SIGQUIT)
 	defer func() {
 
 		cmd := exec.Command("git", "push", "origin", "main")
@@ -21,38 +24,34 @@ func main() {
 
 	}()
 	gitinit(&cfg)
+	//if err := ; err != nil {
+	//	fmt.Println(err)
+	//	os.Exit(1)
+	//}
 	go func() {
 
 		for {
-			select {
-			case <-exit:
-				os.Exit(0)
-				time.Sleep(time.Second)
-				cmd := exec.Command("git", "push", "origin", "main")
-				cmd.Output()
-			default:
-				file, err := createFile()
-				if err != nil {
-					os.Exit(1)
-				}
 
-				if err := add(); err != nil {
+			file, err := createFile()
+			if err != nil {
+				os.Exit(1)
+			}
 
-					os.Exit(1)
-				}
-				if err := commit(file); err != nil {
+			if err := add(); err != nil {
 
-					os.Exit(1)
-				}
-				if err := deleteFile(file); err != nil {
-					os.Exit(1)
+				os.Exit(1)
+			}
+			if err := commit(file); err != nil {
 
-				}
+				os.Exit(1)
+			}
+			if err := deleteFile(file); err != nil {
+				os.Exit(1)
+
 			}
 
 		}
 	}()
 	<-exit
-	cmd := exec.Command("git", "push", "origin", "main")
-	cmd.Output()
+
 }
