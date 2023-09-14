@@ -28,24 +28,24 @@ func main() {
 	gitinit(&cfg)
 	go func() {
 
-		for {
+		for i := 0; i < cfg.CommitCount; i++ {
 
 			file, err := createFile()
 			if err != nil {
-				logger.Error(err.Error())
+				logger.Info(err.Error())
 
 			}
 
 			if err := add(); err != nil {
-				logger.Error(err.Error())
+				logger.Info(err.Error())
 
 			}
 			if err := commit(file); err != nil {
-				logger.Error(err.Error())
+				logger.Info(err.Error())
 
 			}
 			if err := deleteFile(file); err != nil {
-				logger.Error(err.Error())
+				logger.Info(err.Error())
 
 			}
 
