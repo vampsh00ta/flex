@@ -26,10 +26,10 @@ func main() {
 		for {
 			select {
 			case <-exit:
+				os.Exit(0)
 				time.Sleep(time.Second)
 				cmd := exec.Command("git", "push", "origin", "main")
 				cmd.Output()
-				break
 			default:
 				file, err := createFile()
 				if err != nil {
@@ -52,4 +52,7 @@ func main() {
 
 		}
 	}()
+	<-exit
+	cmd := exec.Command("git", "push", "origin", "main")
+	cmd.Output()
 }
