@@ -1,51 +1,52 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"os/exec"
 )
 
-func gitinit(cfg *Config) (err error) {
+type Git struct {
+	cfg Config
+}
+
+func NewGit(cfg Config) *Git {
 	cmd := exec.Command("git", "init", ".")
-	_, err = cmd.Output()
-	if err != nil {
-		return err
-	}
+	cmd.Output()
+
 	cmd = exec.Command("git", "remote", "add", "origin", cfg.GitUrl)
-	_, err = cmd.Output()
-	if err != nil {
-		return err
-	}
+	cmd.Output()
+
+	cmd = exec.Command("git", "remote", "set-url", "origin", cfg.GitUrl)
+	cmd.Output()
+
 	cmd = exec.Command("git", "checkout", "-b", "main")
-	_, err = cmd.Output()
-	if err != nil {
-		return err
-	}
-	log.Println("init")
-	return err
-}
-func add() error {
+	cmd.Output()
 
-	cmd := exec.Command("git", "add", ".")
+	return &Git{cfg}
+}
+
+func (git Git) add() (string, error) {
+
+	cmd := exec.Command("git", "add", git.cfg.TextFile)
 	out, err := cmd.Output()
-
 	if err != nil {
-		return err
+		return "", err
 	}
-	log.Println(string(out))
-	return nil
+	return string(out), nil
 }
-func commit(text *string) error {
+func (git Git) commit(text *string) (string, error) {
 	cmd := exec.Command("git", "commit", "-m", *text)
 	out, err := cmd.Output()
 	if err != nil {
-		return err
+		return "", err
 	}
-	log.Println(string(out))
-	return nil
+	return string(out), nil
+
 }
-func push() error {
-	fmt.Println("pushed")
-	return nil
+func (git Git) push() (string, error) {
+	cmd := exec.Command("git", "push", "origin", "main")
+	out, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+	return string(out), nil
 }

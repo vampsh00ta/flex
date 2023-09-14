@@ -24,30 +24,29 @@ func main() {
 		logger.Info(string(result))
 
 	})
+	git := NewGit(cfg)
 
-	gitinit(&cfg)
 	go func() {
+		var out string
+		var uuid *string
 
+		var err error
 		for i := 0; i < cfg.CommitCount; i++ {
-
-			file, err := createFile()
+			uuid, err = writeUuid(cfg.TextFile)
 			if err != nil {
 				logger.Info(err.Error())
-
 			}
 
-			if err := add(); err != nil {
+			out, err = git.add()
+			if err != nil {
 				logger.Info(err.Error())
-
 			}
-			if err := commit(file); err != nil {
+			logger.Info(out)
+			out, err = git.commit(uuid)
+			if err != nil {
 				logger.Info(err.Error())
-
 			}
-			if err := deleteFile(file); err != nil {
-				logger.Info(err.Error())
-
-			}
+			logger.Info(out)
 
 		}
 		os.Exit(0)

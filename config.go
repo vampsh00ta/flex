@@ -7,6 +7,7 @@ import (
 type Config struct {
 	GitUrl      string `json:"gitUrl" env:"gitUrl"`
 	CommitCount int    `json:"commitCount" env:"commitCount"`
+	TextFile    string `json:"textFile" env:"textFile"`
 }
 
 func LoadCondig() Config {
