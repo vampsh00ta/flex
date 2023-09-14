@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"time"
 )
 
 func main() {
@@ -22,7 +23,9 @@ func main() {
 	}()
 	gitinit(&cfg)
 	go func() {
+
 		for {
+			time.Sleep(time.Second)
 			file, err := createFile()
 			if err != nil {
 				os.Exit(1)
