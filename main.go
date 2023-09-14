@@ -13,36 +13,43 @@ func main() {
 
 	exit := make(chan os.Signal, 1)
 	signal.Notify(exit, os.Interrupt)
+	defer func() {
 
+		cmd := exec.Command("git", "push", "origin", "main")
+		cmd.Output()
+		fmt.Println("slatt")
+
+	}()
 	gitinit(&cfg)
 	go func() {
 
 		for {
+			select {
+			case <-exit:
+				time.Sleep(time.Second)
+				cmd := exec.Command("git", "push", "origin", "main")
+				cmd.Output()
+				break
+			default:
+				file, err := createFile()
+				if err != nil {
+					os.Exit(1)
+				}
 
-			file, err := createFile()
-			if err != nil {
-				os.Exit(1)
-			}
+				if err := add(); err != nil {
 
-			if err := add(); err != nil {
+					os.Exit(1)
+				}
+				if err := commit(file); err != nil {
 
-				os.Exit(1)
-			}
-			if err := commit(file); err != nil {
+					os.Exit(1)
+				}
+				if err := deleteFile(file); err != nil {
+					os.Exit(1)
 
-				os.Exit(1)
-			}
-			if err := deleteFile(file); err != nil {
-				os.Exit(1)
-
+				}
 			}
 
 		}
 	}()
-	<-exit
-	time.Sleep(time.Second)
-	cmd := exec.Command("git", "push", "origin", "main")
-	cmd.Output()
-	fmt.Println("slatt")
-
 }
