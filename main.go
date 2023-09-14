@@ -36,24 +36,21 @@ func main() {
 
 			file, err := createFile()
 			if err != nil {
-				os.Exit(1)
 			}
 
 			if err := add(); err != nil {
 
-				os.Exit(1)
 			}
 			if err := commit(file); err != nil {
 
-				os.Exit(1)
 			}
 			if err := deleteFile(file); err != nil {
-				os.Exit(1)
 
 			}
 
 		}
 	}()
+	<-exit
 	closer.Hold()
 
 }
