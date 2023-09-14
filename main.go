@@ -50,7 +50,7 @@ func main() {
 			}
 
 		}
-		os.Exit(0)
+		signal.Stop(exit)
 	}()
 	<-exit
 	closer.Hold()
