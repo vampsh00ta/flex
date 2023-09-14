@@ -32,7 +32,7 @@ func main() {
 				os.Exit(1)
 			}
 
-			if err := add(file); err != nil {
+			if err := add(); err != nil {
 				log.Print(err)
 
 				os.Exit(1)
