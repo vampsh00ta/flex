@@ -50,7 +50,7 @@ func main() {
 			}
 
 		}
-		exit <- syscall.SIGSYS
+		os.Exit(0)
 	}()
 	<-exit
 	closer.Hold()
