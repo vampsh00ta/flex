@@ -25,9 +25,9 @@ func gitinit(cfg *Config) (err error) {
 	log.Println("init")
 	return err
 }
-func add(file *string) error {
+func add() error {
 
-	cmd := exec.Command("git", "add", *file)
+	cmd := exec.Command("git", "add", ".")
 	out, err := cmd.Output()
 
 	if err != nil {

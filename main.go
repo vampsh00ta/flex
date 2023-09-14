@@ -15,7 +15,7 @@ func main() {
 	defer func() {
 		cmd := exec.Command("git", "push", "origin", "main")
 		res, _ := cmd.Output()
-		fmt.Println("exit", res)
+		fmt.Println(res)
 
 	}()
 	exit := make(chan os.Signal, 1)
@@ -25,7 +25,6 @@ func main() {
 	go func() {
 		for {
 			time.Sleep(time.Second)
-
 			file, err := createFile()
 			if err != nil {
 				log.Print(err)
