@@ -6,25 +6,29 @@ import (
 	"os/exec"
 )
 
-func gitinit(cfg Config) (err error) {
-	_, err = exec.Command("git init .").Output()
+func gitinit(cfg *Config) (err error) {
+	cmd := exec.Command("git", "init", ".")
+	_, err = cmd.Output()
 	if err != nil {
-		return nil
+		return err
 	}
-	_, err = exec.Command("git remote add origin %s", cfg.GitUrl).Output()
+	cmd = exec.Command("git", "remote", "add", "origin", cfg.GitUrl)
+	_, err = cmd.Output()
 	if err != nil {
-		return nil
+		return err
+	}
+	cmd = exec.Command("git", "checkout", "-b", "main")
+	_, err = cmd.Output()
+	if err != nil {
+		return err
 	}
 	log.Println("init")
 	return err
 }
-func add() error {
+func add(file *string) error {
 
-	cmd := exec.Command("git", "add", ".")
+	cmd := exec.Command("git", "add", *file)
 	out, err := cmd.Output()
-	if err != nil {
-		fmt.Println("could not run command: ", err)
-	}
 
 	if err != nil {
 		return err
@@ -32,12 +36,16 @@ func add() error {
 	log.Println(string(out))
 	return nil
 }
-func commit(text string) error {
-	cmd := exec.Command("git", "commit", "-m", text)
+func commit(text *string) error {
+	cmd := exec.Command("git", "commit", "-m", *text)
 	out, err := cmd.Output()
 	if err != nil {
 		return err
 	}
 	log.Println(string(out))
+	return nil
+}
+func push() error {
+	fmt.Println("pushed")
 	return nil
 }

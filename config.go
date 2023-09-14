@@ -10,11 +10,6 @@ type Config struct {
 	FileDone       string `json:"fileDone" env:"fileDone"`
 	SpotifyAlbum   string `json:"spotifyUrl" env:"spotifyAlbum"`
 	Authorization  string `json:"authorization" env:"authorization"`
-	User
-}
-type User struct {
-	username string
-	password string
 }
 
 func LoadCondig() Config {
