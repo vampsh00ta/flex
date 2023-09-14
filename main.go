@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -11,7 +10,6 @@ import (
 
 func main() {
 	cfg := LoadCondig()
-	var log *log.Logger
 	defer func() {
 		cmd := exec.Command("git", "push", "origin", "main")
 		res, _ := cmd.Output()
@@ -27,23 +25,19 @@ func main() {
 			time.Sleep(time.Second)
 			file, err := createFile()
 			if err != nil {
-				log.Print(err)
 
 				os.Exit(1)
 			}
 
 			if err := add(); err != nil {
-				log.Print(err)
 
 				os.Exit(1)
 			}
 			if err := commit(file); err != nil {
-				log.Print(err)
 
 				os.Exit(1)
 			}
 			if err := deleteFile(file); err != nil {
-				log.Print(err)
 				os.Exit(1)
 
 			}
