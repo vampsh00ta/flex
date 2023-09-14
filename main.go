@@ -50,8 +50,9 @@ func main() {
 			}
 
 		}
-		exit <- syscall.SIGINT
+		exit <- syscall.SIGSYS
 	}()
+	<-exit
 	closer.Hold()
 
 }
