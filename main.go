@@ -11,7 +11,7 @@ import (
 
 func main() {
 	cfg := LoadCondig()
-	var logger *slog.Logger
+	logger := slog.New(slog.NewTextHandler(os.Stderr, nil))
 	exit := make(chan os.Signal, 1)
 	signal.Notify(exit, syscall.SIGHUP,
 		syscall.SIGINT,
