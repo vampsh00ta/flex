@@ -9,21 +9,22 @@ import (
 
 func main() {
 	cfg := LoadCondig()
+
+	exit := make(chan os.Signal, 1)
+	signal.Notify(exit, os.Interrupt)
 	defer func() {
+		<-exit
+
 		cmd := exec.Command("git", "push", "origin", "main")
 		cmd.Output()
 		fmt.Println("slatt")
 
 	}()
-	exit := make(chan os.Signal, 1)
-	signal.Notify(exit, os.Interrupt)
-
 	gitinit(&cfg)
 	go func() {
 		for {
 			file, err := createFile()
 			if err != nil {
-
 				os.Exit(1)
 			}
 
@@ -42,6 +43,5 @@ func main() {
 
 		}
 	}()
-	<-exit
 
 }
