@@ -13,19 +13,12 @@ func main() {
 
 	exit := make(chan os.Signal, 1)
 	signal.Notify(exit, os.Interrupt)
-	defer func() {
-		<-exit
 
-		cmd := exec.Command("git", "push", "origin", "main")
-		cmd.Output()
-		fmt.Println("slatt")
-
-	}()
 	gitinit(&cfg)
 	go func() {
 
 		for {
-			time.Sleep(time.Second)
+
 			file, err := createFile()
 			if err != nil {
 				os.Exit(1)
@@ -46,5 +39,10 @@ func main() {
 
 		}
 	}()
+	<-exit
+	time.Sleep(time.Second)
+	cmd := exec.Command("git", "push", "origin", "main")
+	cmd.Output()
+	fmt.Println("slatt")
 
 }
