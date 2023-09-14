@@ -11,8 +11,8 @@ func main() {
 	cfg := LoadCondig()
 	defer func() {
 		cmd := exec.Command("git", "push", "origin", "main")
-		res, _ := cmd.Output()
-		fmt.Println(res)
+		cmd.Output()
+		fmt.Println("slatt")
 
 	}()
 	exit := make(chan os.Signal, 1)
