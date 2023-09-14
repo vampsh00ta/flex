@@ -5,11 +5,7 @@ import (
 )
 
 type Config struct {
-	GitUrl         string `json:"gitUrl" env:"gitUrl"`
-	FileToReadName string `json:"fileToReadName" env:"fileToReadName"`
-	FileDone       string `json:"fileDone" env:"fileDone"`
-	SpotifyAlbum   string `json:"spotifyUrl" env:"spotifyAlbum"`
-	Authorization  string `json:"authorization" env:"authorization"`
+	GitUrl string `json:"gitUrl" env:"gitUrl"`
 }
 
 func LoadCondig() Config {

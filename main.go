@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -12,11 +11,14 @@ import (
 func main() {
 	cfg := LoadCondig()
 	var log log.Logger
-	file, _ := os.OpenFile(cfg.FileToReadName, os.O_RDWR|os.O_CREATE, 0666)
-	defer file.Close()
 	defer func() {
 		cmd := exec.Command("git", "push", "origin", "main")
-		_, _ = cmd.Output()
+		res, err := cmd.Output()
+
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("exit", res)
 
 	}()
 	exit := make(chan os.Signal, 1)
@@ -53,6 +55,5 @@ func main() {
 		}
 	}()
 	<-exit
-	fmt.Println("exit")
 
 }
