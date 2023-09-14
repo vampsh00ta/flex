@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/xlab/closer"
+	"golang.org/x/exp/slog"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -11,6 +11,7 @@ import (
 
 func main() {
 	cfg := LoadCondig()
+	var logger *slog.Logger
 	exit := make(chan os.Signal, 1)
 	signal.Notify(exit, syscall.SIGHUP,
 		syscall.SIGINT,
@@ -18,33 +19,33 @@ func main() {
 		syscall.SIGQUIT)
 
 	closer.Bind(func() {
-
 		cmd := exec.Command("git", "push", "origin", "main")
-		cmd.Output()
-		fmt.Println("slatt")
+		result, _ := cmd.Output()
+		logger.Info(string(result))
 
 	})
 
 	gitinit(&cfg)
-	//if err := ; err != nil {
-	//	fmt.Println(err)
-	//	os.Exit(1)
-	//}
 	go func() {
 
 		for {
 
 			file, err := createFile()
 			if err != nil {
+				logger.Error(err.Error())
+
 			}
 
 			if err := add(); err != nil {
+				logger.Error(err.Error())
 
 			}
 			if err := commit(file); err != nil {
+				logger.Error(err.Error())
 
 			}
 			if err := deleteFile(file); err != nil {
+				logger.Error(err.Error())
 
 			}
 
