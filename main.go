@@ -1,10 +1,8 @@
 package main
 
 import (
-	"github.com/xlab/closer"
 	"golang.org/x/exp/slog"
 	"os"
-	"os/exec"
 	"os/signal"
 	"syscall"
 )
@@ -18,14 +16,12 @@ func main() {
 		syscall.SIGTERM,
 		syscall.SIGQUIT)
 
-	closer.Bind(func() {
-		cmd := exec.Command("git", "push", "origin", "main")
-		result, _ := cmd.Output()
-		logger.Info(string(result))
-
-	})
 	git := NewGit(cfg)
+	defer func() {
+		out, _ := git.push()
+		logger.Info(out)
 
+	}()
 	go func() {
 		var out string
 		var uuid *string
@@ -49,8 +45,8 @@ func main() {
 			logger.Info(out)
 
 		}
-		os.Exit(0)
+		exit <- syscall.SIGHUP
 	}()
-	closer.Hold()
+	<-exit
 
 }
